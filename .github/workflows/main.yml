@@ -40,5 +40,4 @@ jobs:
         run: terraform plan -out=tfplan
 
      
-        if: github.ref == 'refs/heads/main'
-        run: terraform apply -auto-approve tfplan
+      
