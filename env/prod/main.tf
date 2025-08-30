@@ -9,7 +9,7 @@ module "vnets" {
     source = "../../vnet"
     
     virtual_networks = var.virtual_networks
-    depends_on = [ var.resource_groups ]
+    depends_on = [ module.rg ]
   
 }
 module "subnets" {
