@@ -25,19 +25,19 @@ jobs:
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v2
         with:
-          terraform_version: 1.8.5   # jo version tu use karta hai wo daal de
+          terraform_version: 1.8.5
 
       # Step 4: Terraform Init
       - name: Terraform Init
+        working-directory: ./env/prod
         run: terraform init
 
       # Step 5: Terraform Validate
       - name: Terraform Validate
+        working-directory: ./env/prod
         run: terraform validate
 
       # Step 6: Terraform Plan
       - name: Terraform Plan
+        working-directory: ./env/prod
         run: terraform plan -out=tfplan
-
-     
-      
