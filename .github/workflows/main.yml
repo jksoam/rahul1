@@ -7,7 +7,7 @@ on:
       - feature
 
 jobs:
-  terraform:
+  terraform-plan:
     runs-on: ubuntu-latest
 
     steps:
@@ -22,7 +22,7 @@ jobs:
           creds: ${{ secrets.AZURESECRET }}
 
       # Step 3: Setup Terraform
-      - name: Installation Terraform
+      - name: Install Terraform
         uses: hashicorp/setup-terraform@v2
         with:
           terraform_version: 1.8.5
@@ -36,18 +36,40 @@ jobs:
       - name: Terraform Validate
         working-directory: ./env/prod
         run: terraform validate
-  
+
       # Step 6: Terraform Plan
       - name: Terraform Plan
-apply:
-  runs-on: ubuntu-latest
-  environment: dev
-
-  steps:
-    # Step 7: Terraform Apply
-    - name: Terraform Apply
-      working-directory: ./env/prod
-      run: terraform apply -auto-approve tfplan      
-      
         working-directory: ./env/prod
         run: terraform plan -out=tfplan
+
+  terraform-apply:
+    runs-on: ubuntu-latest
+    environment: dev
+    needs: terraform-plan
+
+    steps:
+      # Step 7: Checkout repo
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      # Step 8: Azure Login
+      - name: Azure Login
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURESECRET }}
+
+      # Step 9: Setup Terraform
+      - name: Install Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: 1.8.5
+
+      # Step 10: Terraform Init
+      - name: Terraform Init
+        working-directory: ./env/prod
+        run: terraform init
+
+      # Step 11: Terraform Apply
+      - name: Terraform Apply
+        working-directory: ./env/prod
+        run: terraform apply -auto-approve tfplan
