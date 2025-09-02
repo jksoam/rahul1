@@ -36,8 +36,18 @@ jobs:
       - name: Terraform Validate
         working-directory: ./env/prod
         run: terraform validate
-
+  
       # Step 6: Terraform Plan
       - name: Terraform Plan
+apply:
+  runs-on: ubuntu-latest
+  environment: dev
+
+  steps:
+    # Step 7: Terraform Apply
+    - name: Terraform Apply
+      working-directory: ./env/prod
+      run: terraform apply -auto-approve tfplan      
+      
         working-directory: ./env/prod
         run: terraform plan -out=tfplan
